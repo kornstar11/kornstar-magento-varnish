@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<config>
+	<kornstar_varnish_config>
+		<log_file>Kornstar_Varnish.log</log_file>
+		<http_request_address>127.0.0.1</http_request_address>
+		<http_request_port>80</http_request_port>
+	</kornstar_varnish_config>
+    <modules>
+       <Kornstar_Varnish>
+         <version>0.1.1</version>
+       </Kornstar_Varnish>
+    </modules>
+    <frontend>
+        <routers>
+            <kornstar_varnish>
+                <use>standard</use>
+                <args>
+                    <module>Kornstar_Varnish</module>
+                    <frontName>kornstarvarnish</frontName>
+                </args>
+            </kornstar_varnish>
+        </routers>  
+    </frontend>
+    <admin>
+	    <routers>
+		    <adminhtml>
+			    <args>
+				    <modules>
+					    <Kornstar_Varnish before="Mage_Adminhtml">Kornstar_Varnish_Adminhtml</Kornstar_Varnish>
+				    </modules>
+			    </args>
+		    </adminhtml>
+	    </routers>
+    </admin>
+<!--
+<adminhtml>
+	<menu>
+		<kornstar_varnish translate="title" module="kornstar_varnish">
+			<title>Varnish</title>
+			<sort_order>60</sort_order>
+			<children>
+				<kornstar_varnish_settings module="kornstar_varnish">
+					<title>Settings</title>
+					<action>adminhtml/varnish</action>
+				</kornstar_varnish_settings>
+			</children>
+		</kornstar_varnish>
+	</menu>
+</adminhtml>
+-->
+    <global>
+     <cache>
+            <types>
+                <kornstarvarnish translate="label,description" module="kornstarvarnish">
+                    <label>Varnish Cache</label>
+                    <description>Clears the Varnish cache</description>
+                    <tags>kornstar_varnish</tags>
+                </kornstarvarnish>
+            </types>
+     </cache>
+
+     <resources>
+	    <kornstarvarnish_write>
+              <connection>
+                <use>core_write</use>
+              </connection>
+            </kornstarvarnish_write>
+            <kornstarvarnish_read>
+              <connection>
+                <use>core_read</use>
+              </connection>
+            </kornstarvarnish_read>     
+            <kornstarvarnish_setup>
+                <setup>
+                    <module>Kornstar_Varnish</module>
+                    <class>Kornstar_Varnish_Model_Resource_Setup</class>
+                </setup>
+            </kornstarvarnish_setup>
+      </resources>
+    	<helpers>
+		<kornstar_varnish>
+		    <class>Kornstar_Varnish_Helper</class>
+		</kornstar_varnish>
+        </helpers>
+        <models>
+            <kornstar_varnish>
+              <class>Kornstar_Varnish_Model</class>
+            </kornstar_varnish>
+            <!-- Overrides start below -->
+	   <catalog_resource> 
+	    	<rewrite>
+			<product_collection>Kornstar_Varnish_Model_Overrides_Catalog_Resource_Product_Collection</product_collection>
+		</rewrite>
+	   </catalog_resource>
+	    <catalog>
+		<rewrite>
+                        <resource_product_collection>Kornstar_Varnish_Model_Overrides_Catalog_Resource_Product_Collection</resource_product_collection>
+                </rewrite> 
+	    	<rewrite>
+			<product>Kornstar_Varnish_Model_Overrides_Catalog_Product</product>
+		</rewrite>
+		<rewrite>
+			<category>Kornstar_Varnish_Model_Overrides_Catalog_Category</category>
+		</rewrite>
+	    </catalog>
+	    <cms>
+		<rewrite>
+			<page>Kornstar_Varnish_Model_Overrides_Cms_Page</page>
+		</rewrite>
+	    </cms>
+	    <core>
+		<rewrite>
+			<url_rewrite>Kornstar_Varnish_Model_Overrides_Core_Url_Rewrite</url_rewrite>
+		</rewrite>
+	    </core>
+	   <!-- End Overrides -->
+	   <kornstarvarnish>
+		<class>Kornstar_Varnish_Model</class>
+		<resourceModel>kornstarvarnish_resource</resourceModel>
+	   </kornstarvarnish>
+	   <kornstarvarnish_resource>
+		<class>Kornstar_Varnish_Model_Resource</class>
+		<entities>
+			<uri>
+				<table>kornstar_varnish_uri</table>
+			</uri>
+		</entities>
+	   </kornstarvarnish_resource>
+        </models>
+        <events>
+            <http_response_send_before>
+                <observers>
+                    <kornstar_varnish>
+                        <type>singleton</type>
+                        <class>kornstar_varnish/observer</class>
+                        <method>process</method>
+                    </kornstar_varnish>
+                </observers>
+            </http_response_send_before>
+	    <!-- Start cache clear intercepts -->
+	    <controller_action_predispatch_adminhtml_cache_massRefresh>
+                <observers>
+                    <kornstar_varnish_massRefresh>
+                        <type>singleton</type>
+                        <class>kornstar_varnish/varnish_observer</class>
+                        <method>clearCache</method>
+                    </kornstar_varnish_massRefresh>
+                </observers>
+            </controller_action_predispatch_adminhtml_cache_massRefresh>
+	
+	    <controller_action_predispatch_adminhtml_cache_flushAll>
+                <observers>
+			<kornstar_varnish_massFlush>
+                        <type>singleton</type>
+                        <class>kornstar_varnish/varnish_observer</class>
+                        <method>clearCache</method>
+                    </kornstar_varnish_massFlush>
+                </observers>
+            </controller_action_predispatch_adminhtml_cache_flushAll>
+	    <application_clean_cache>
+                <observers>
+			<kornstar_varnish_flush>
+                        <type>singleton</type>
+                        <class>kornstar_varnish/varnish_observer</class>
+                        <method>clearCache</method>
+			</kornstar_varnish_flush>
+                </observers>
+            </application_clean_cache>
+
+        </events>
+    </global>
+</config>
