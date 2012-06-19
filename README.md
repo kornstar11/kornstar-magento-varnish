@@ -1,7 +1,7 @@
 kornstar-magento-varnish
 ========================
 
-This is a Magento module to manage the Varnsih HTTP frontend cache.
+This is a Magento module to manage the Varnish HTTP frontend cache.
 Currrently, this is a work in progress.
 
 Know bugs:
