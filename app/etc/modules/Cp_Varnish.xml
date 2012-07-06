@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <config>
     <modules>
-        <Cp_Varnish>
+        <Kornstar_Varnish>
             <active>true</active>
             <codePool>local</codePool>
-        </Cp_Varnish>
+        </Kornstar_Varnish>
     </modules>
 </config>
