@@ -10,5 +10,3 @@ Know bugs:
 
 In its current state this code has not been test, please proceed with caution.
 
-For more info please visit:
-http://kornster.com (kornstar.com was already taken (sad-face))
